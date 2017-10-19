@@ -186,6 +186,7 @@ public void onRestoreInstanceState(Bundle savedInstanceState) {
 这我们引用本知识库里的一张图片：
 ![Mou icon](https://github.com/GeniusVJR/LearningNotes/blob/master/Part1/Android/FlowchartDiagram.jpg?raw=true)
 
+经验证，图中流程有误，不知道是不是版本有改动，我这边验证的是，Fragment.onStart()先于Activity.onStart()执行，源码中Fragment.onStart()是在Activity.onStart()中调用的，所以先于Activity.onStart()执行完。另外要注意的是，Fragment.onResume()是Activity.onResume()执行完之后才被调用的，是在Activity.onPostResume()中调用的。
 
 **为什么在Service中创建子线程而不是Activity中**
 
