@@ -1,0 +1,152 @@
+Serializable 和 Parcelable 的使用和区别
+
+一、序列化的目的
+	1、永久的保存对象，将对象数据保存在文件、磁盘或者数据库中。
+	2、通过序列化操作将对象数据在网络上进行传输。
+	3、将对象序列化之后在进程间进行传输。
+	4、在安卓中使用Intent 进行传输时候，数据类型较为复杂的需要进行序列化操作。
+
+二、Serializable 
+
+	public class Mybox3 implements Serializable {
+		private String name;
+		private String age;
+
+		public Mybox3(String name,String age){
+			this.name = name;
+			this.age = age;
+		}
+
+		public String getName(){
+			return name;
+		}
+
+		public void setName(String name){
+			this.name = name;
+		}
+
+		public String getAge(){
+			reture age;
+		}
+
+		public void setAge(String age){
+			this.age = age;
+		}
+
+		@Override
+		public String toString(){
+			return "Mybox3{" +
+                "name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                '}';
+		}
+
+	}
+
+	通过上述代码可以看出，使用Serializable 的时候比较简单，只需要实现Serializable接口即可，这样就告诉程序这个类是可以被序列化的。
+
+	下面看如何实现对象的序列化与反序列化：
+	MyBox3 mybox3 = new Mybox3（“sd”，“32”）；
+
+	File file = new File（“box.out”）；
+	//序列化
+	FileOutputStream outputStream = new FileOutputStream（file）；
+	ObjectOutputStream objectOutputStream = new ObjectOutputStream（outputStream）；
+	objectOutputStream.writeObject(mybox3);
+	objectOutputStream.close();
+	//反序列化
+	FileInputStream fileInputStream = new FileInputStream(file);
+	ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+	Mybox3 o = (Mybox3) inputStream.readObject();
+	inputStream.close();
+	System.out.println(o.toString());
+
+三、Parcelbale
+Parcelbale 是Anddroid 特有的序列化方式，它的实现相当Serialiable 来说更加复杂一点。
+Parcelbale 内部包装了可序列化的数据，序列化功能由writeToParcel 方法完成，反序列化由CREATOR完成。
+
+public class Mybox4Par implements Parcelable {
+    private String name;
+    private String age;
+
+    public Mybox4Par(String name, String age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Mybox4Par{" +
+                "name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(age);
+    }
+
+    public static final Parcelable.Creator<Mybox4Par> CREATOR=new Creator<Mybox4Par>() {
+        @Override
+        public Mybox4Par createFromParcel(Parcel source) {
+            return new Mybox4Par(source);
+        }
+
+        @Override
+        public Mybox4Par[] newArray(int size) {
+            return new Mybox4Par[size];
+        }
+    };
+
+
+    public Mybox4Par(Parcel in){
+        name=in.readString();
+        age=in.readString();
+    }
+}
+
+上述就是实现了 Parcelable 接口，并重写方法，我们看下如何使用：
+
+//第一个Activity
+
+Mybox4Par mybox4Par=new Mybox4Par("keven","25");
+Bundle bundle=new Bundle();
+Intent intent=new Intent(this,MyViewActivity.class);
+bundle.putParcelable("box",mybox4Par);
+intent.putExtras(bundle);
+startActivity(intent);
+//第二个Activity
+
+Intent intent=getIntent();
+Bundle extras = intent.getExtras();
+Mybox4Par box = extras.getParcelable("box");
+Log.e("box",box.toString());
+
+
+四、两者选择
+Serializable 使用简单但是开销很大，序列化和反序列化需要大量的I/O 操作，一般将对象序列化到存储设备中，或序列化后通过网络传输；
+
+Parcelable 使用稍微麻烦点，但是效率高，主要用在内存序列化上。
