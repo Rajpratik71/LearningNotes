@@ -1,6 +1,9 @@
 #ANR
 ---
+//
+ANR 在自己测试时KeyDispatchTimeout BroadcastTimeout 的ANR时间不确定
 
+//
 1、ANR排错一般有三种类型
 
 1. KeyDispatchTimeout(5 seconds) --主要是类型按键或触摸事件在特定时间内无响应

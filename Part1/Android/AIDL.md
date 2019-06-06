@@ -1,6 +1,20 @@
 #AIDL
----
+//
+可以参考这个连接(有一处错误:ontransact调用的是服务端的方法)
 
+创建.aidl文件
+
+service类中 实现aidl 转换后的类的stub借口(这个借口是Binder,Ibinder类型)并且在Service的Onbind方法返回
+activity中 通过serviceConnection 回调的方法 得到Ibinder 然后用asinterface 转换成Iinterface调用它的接口方法
+//
+
+Activity与service通信可以通过Binder,和AIDL 通信不一样,不需要实现AIDL的Stub 接口.
+//
+服务端主动调用客户端方法,可以通过在接口.客户端注册接口,服务端获取客户端传递过来的接口 回调就可以服务端主动实现通信.
+http://blog.csdn.net/liuyi1207164339/article/details/51708025
+//
+---
+http://www.jianshu.com/p/4e38cdc016c9
 1. 创建一个接口，再里面定义方法
 
 ```

@@ -1,3 +1,5 @@
+> 通过Bitmap compress和 FileOutputStream 缓存文件,LruCache 类似于hashmap 做内存缓存.
+
 #Android图片中的三级缓存
 ---
 

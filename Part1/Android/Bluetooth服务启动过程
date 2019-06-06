@@ -1,0 +1,12 @@
+http://blog.csdn.net/jingwen3699/article/details/53400045 在ServiceManager 自定义服务
+
+SystemServer启动后 会执行main方法
+在main方法中会new SystemServer().run();run 方法中会启动各种启动service
+蓝牙服务就是通过run方法中的startOtherServices启动,在这个方法中会通过config配置属性 SystemProperties.getBoolean("config.disable_bluetooth", false);决定蓝牙是否默认启动
+
+如果是开启的就会通过SystemServiceManager.startService 启动BluetoothService(及成语SystemService)
+
+在BluetoothService 中会创建BluetoothManagerService 并且在systemReady 后启动.
+最终会通过SystemManager.add 进系统服务
+
+接下来就是如何和Bluetooth.apk关联了.
