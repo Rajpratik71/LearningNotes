@@ -11,8 +11,8 @@ git init
 * 获取远程仓库
 
 ```
-git clone [url]
-例：git clone https://github.com/you/yourpro.git
+git clone --depth 1 [url]
+例：git clone --depth 1 https://github.com/you/yourpro.git
 ```
 
 * 创建远程仓库
